@@ -7,8 +7,9 @@
 int main(int argc, char * argv[]) {
     printf("Hello stego\n\n");
     cli_options options = parse_command_line(argc, argv);
+
     printf("#### Config ####\n");
-    printf("Mode: %s\n", get_mode(options) == EMBED_MODE ? "Embed" : "Extract");
+    printf("Mode: %s\n", get_mode(options) == EMBED ? "Embed" : "Extract");
     printf("Input: %s\n", get_input_file(options));
     printf("Carrier: %s\n", get_carrier_file(options));
     printf("Output: %s\n", get_output_file(options));
@@ -16,6 +17,13 @@ int main(int argc, char * argv[]) {
     printf("Enc Algorithm: %s\n", get_enc_alg(options));
     printf("Enc Mode: %s\n", get_enc_mode(options));
     printf("Password: %s\n", get_password(options));
-    printf("################\n");
+    printf("################\n\n");
+
+
+    stego_cfg cfg = create_stego_config(options);
+
+    run_stego_config(cfg);
+
     free_options(options);
+    free_stego_config(cfg);
 }

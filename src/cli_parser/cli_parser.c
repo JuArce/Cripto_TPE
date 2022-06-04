@@ -3,21 +3,7 @@
 #include <stddef.h>
 
 #include "cli_parser.h"
-#include "../stego_cfg/stego_cfg.h"
 
-
-enum {
-    EMBED = 1000,
-    EXTRACT,
-    IN,
-    P,
-    OUT,
-    STEG,
-    A,
-    M,
-    PASS,
-    HELP
-};
 
 static struct option long_options[] = {
    {"embed",    no_argument,        0,  EMBED   },
@@ -68,7 +54,7 @@ cli_options parse_command_line(int argc, char * argv[]) {
 
         switch(c) {
             case EMBED:
-                options->mode = EMBED_MODE;
+                options->mode = EMBED;
                 break;
             case EXTRACT:
                 options->mode = EXTRACT;

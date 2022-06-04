@@ -3,6 +3,18 @@
 
 #include <getopt.h>
 
+enum {
+    EMBED = 1000,
+    EXTRACT,
+    IN,
+    P,
+    OUT,
+    STEG,
+    A,
+    M,
+    PASS,
+    HELP
+};
 
 typedef struct cli_options_struct * cli_options;
 

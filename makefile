@@ -11,7 +11,7 @@ all: stegobmp;
 clean:
 	- rm -f *.o src/*.o stegobmp
 
-COMMON = ./src/cli_parser/cli_parser.o ./src/stego_cfg/stego_cfg.o
+COMMON = ./src/algorithms/*.o ./src/cli_parser/cli_parser.o ./src/stego_cfg/stego_cfg.o
 
 stegobmp: $(COMMON)
 	$(COMPILER) $(CFLAGS) -o stegobmp ./src/stegobmp.c $(COMMON) $(LIBS)
