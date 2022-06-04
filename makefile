@@ -9,16 +9,16 @@ LIBS =
 all: stegobmp;
 
 clean:
-	- rm -f *.o src/*.o
+	- rm -f *.o src/*.o stegobmp
 
-COMMON = ./src/stego_cfg/stego_cfg.o 
+COMMON = ./src/cli_parser/cli_parser.o ./src/stego_cfg/stego_cfg.o
 
 stegobmp: $(COMMON)
 	$(COMPILER) $(CFLAGS) -o stegobmp ./src/stegobmp.c $(COMMON) $(LIBS)
 		rm -f src/*.o
 
 test: clean all
-	mkdir tests; valgrind --leak-check=full -v ./stegobmp 2>> tests/results.valgrind; cppcheck --quiet --enable=all --force --inconclusive ./src/stegobmp.c 2>> tests/output.cppOut
+	mkdir tests; valgrind --leak-check=full -v ./src/stegobmp 2>> tests/results.valgrind; cppcheck --quiet --enable=all --force --inconclusive ./src/stegobmp.c 2>> tests/output.cppOut
 
 cleanTest:
 	rm -rf tests/output.cppOut ./tests/report.tasks tests/results.valgrind tests
