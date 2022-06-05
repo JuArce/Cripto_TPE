@@ -3,14 +3,16 @@
 
 #include "../cli_parser/cli_parser.h"
 
+
+#define LSB1 "LSB1"
+#define LSB4 "LSB4"
+#define LSBI "LSBI"
+
 enum stego_mode {
     EMBED_MODE,
     EXTRACT_MODE
 };
 
-#define LSB1 "LSB1"
-#define LSB4 "LSB4"
-#define LSBI "LSBI"
 
 typedef struct stego_cfg_struct * stego_cfg;
 
