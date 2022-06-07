@@ -4,10 +4,11 @@
 #include <string.h>
 
 #include "bmp.h"
-
+#include "../logger/logger.h"
 
 #define HEADER_SIZE 54
 #define BMP 0x4d42
+#define PIXEL_SIZE 3
 
 
 typedef struct __attribute__((packed)) bmp_header_struct  {             // Total: 54 bytes
@@ -44,6 +45,8 @@ typedef struct bmp_image_struct {
 } bmp_image_struct;
 
 
+static void read_header(FILE * fp, bmp_image image);
+static void read_image_data(FILE * fp, bmp_image image);
 //static void check_bmp_header(bmp_image image);
 
 
@@ -52,32 +55,44 @@ typedef struct bmp_image_struct {
     Do not close the file.
 */
 bmp_image read_image(FILE * fp) {
+    log(INFO, "Reading bmp image");
     bmp_image image = calloc(1, sizeof(bmp_image_struct));
 
     if(NULL == image) {
         //TODO handle error
     }
 
-    uint8_t raw_header[HEADER_SIZE];
-    fread(&raw_header, 1, HEADER_SIZE, fp);
-
-    //image->header = (bmp_header_struct) raw_header;
-    memcpy(&image->header, raw_header, HEADER_SIZE);
-
-    //TODO delete this prints
-    printf("0x%02x\n", image->header.type);
-    printf("Size:\n\tWidth: %d\n\tHeight: %d\n", image->header.width_px, image->header.height_px);
+    read_header(fp, image);
+    read_image_data(fp, image);
 
     return image;
 }
 
 void free_image(bmp_image image) {
+    free(image->data);
     free(image);
 }
 
 /*void write_image(bmp_image image, FILE * fp) {
 
 }*/
+
+static void read_header(FILE * fp, bmp_image image) {
+    uint8_t raw_header[HEADER_SIZE];
+    fread(&raw_header, 1, HEADER_SIZE, fp);
+
+    //image->header = (bmp_header_struct) raw_header; //Not works :(
+    memcpy(&image->header, raw_header, HEADER_SIZE); //It works
+}
+
+/**
+    Read data from a bmp_image with a valid header
+*/
+static void read_image_data(FILE * fp, bmp_image image) {
+    int data_size = PIXEL_SIZE * image->header.width_px * image->header.height_px;
+    image->data = malloc(data_size);
+    fread(image->data, 1, data_size, fp);
+}
 
 
 /**
