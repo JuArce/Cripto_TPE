@@ -4,14 +4,19 @@
 #include <stddef.h>
 
 #include "stego_cfg.h"
+#include "../algorithms/embed.h"
+#include "../algorithms/extract.h"
 #include "../algorithms/stego_algorithms.h"
 #include "../files/files.h"
+#include "../strategy/mode_strategy.h"
 #include "../strategy/stego_strategy.h"
 
 typedef struct stego_cfg_struct {
     int mode;
+    mode_strategy mode_strategy_fn;
     stego_strategy stego_strategy_fn;
     files files_ptr;
+    //TODO add cryptography
 } stego_cfg_struct;
 
 
@@ -39,6 +44,7 @@ void free_stego_config(stego_cfg config) {
 }
 
 void run_stego_config(stego_cfg config) {
+    config->mode_strategy_fn();
     config->stego_strategy_fn();
 }
 
@@ -46,9 +52,11 @@ static void set_stego_mode(stego_cfg config, int mode) {
     switch(mode) {
         case EMBED:
             config->mode = EMBED_MODE;
+            config->mode_strategy_fn = embed;
             break;
         case EXTRACT:
             config->mode = EXTRACT_MODE;
+            config->mode_strategy_fn = extract;
             break;
         default:
             printf("%s\n", "error");
