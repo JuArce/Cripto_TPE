@@ -9,6 +9,7 @@
 
 #define HEADER_SIZE 54
 #define BMP 0x4d42
+#define NOT_COMPRESSED 0
 
 
 typedef struct __attribute__((packed)) bmp_header_struct  {             // Total: 54 bytes
@@ -47,7 +48,7 @@ typedef struct bmp_image_struct {
 
 static void read_header(FILE * fp, bmp_image image);
 static void read_image_data(FILE * fp, bmp_image image);
-//static void check_bmp_header(bmp_image image);
+static void check_bmp_header(bmp_image image);
 
 
 /**
@@ -63,6 +64,7 @@ bmp_image read_image(FILE * fp) {
     }
 
     read_header(fp, image);
+    check_bmp_header(image);
     read_image_data(fp, image);
 
     return image;
@@ -98,10 +100,13 @@ static void read_image_data(FILE * fp, bmp_image image) {
 /**
     Check:
         type == 0x4d42
-        
+        compression == 0
 */
-/*
 static void check_bmp_header(bmp_image image) {
-    
+    if (BMP != image->header.type) {
+        log(FATAL, "Invalid image format")
+    }
+    if (NOT_COMPRESSED != image->header.compression) {
+        log(FATAL, "Compressed images are not valid")
+    }
 }
-*/
