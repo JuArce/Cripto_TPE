@@ -6,9 +6,9 @@
 #include "bmp.h"
 #include "../logger/logger.h"
 
+
 #define HEADER_SIZE 54
 #define BMP 0x4d42
-#define PIXEL_SIZE 3
 
 
 typedef struct __attribute__((packed)) bmp_header_struct  {             // Total: 54 bytes
@@ -89,7 +89,7 @@ static void read_header(FILE * fp, bmp_image image) {
     Read data from a bmp_image with a valid header
 */
 static void read_image_data(FILE * fp, bmp_image image) {
-    int data_size = PIXEL_SIZE * image->header.width_px * image->header.height_px;
+    int data_size = image->header.size - HEADER_SIZE;
     image->data = malloc(data_size);
     fread(image->data, 1, data_size, fp);
 }
