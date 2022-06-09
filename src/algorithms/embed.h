@@ -1,6 +1,8 @@
 #ifndef EMBED_H
 #define EMBED_H
 
-void embed();
+#include "../files/files.h"
+
+void embed(files f);
 
 #endif

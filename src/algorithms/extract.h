@@ -1,6 +1,9 @@
 #ifndef EXTRACT_H
 #define EXTRACT_H
 
-void extract();
+#include "../files/files.h"
+
+
+void extract(files f);
 
 #endif

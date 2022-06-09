@@ -1,6 +1,5 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include <stdint.h>
 #include <string.h>
 
 #include "bmp.h"
@@ -78,6 +77,14 @@ void free_image(bmp_image image) {
 /*void write_image(bmp_image image, FILE * fp) {
 
 }*/
+
+uint32_t get_image_size(bmp_image image) {
+    return image->header.size - HEADER_SIZE;
+}
+
+uint8_t * get_image_data(bmp_image image) {
+    return image->data;
+}
 
 static void read_header(FILE * fp, bmp_image image) {
     uint8_t raw_header[HEADER_SIZE];
