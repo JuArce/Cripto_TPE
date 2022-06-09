@@ -31,7 +31,7 @@ file read_file(FILE * fp, char * filename) {
 	}
 
 	set_extension(f, strchr(filename, '.')); //The order of this operations is important
-	set_filename(f, strtok(filename, ".")); //Strtok move the filename pointer
+	set_filename(f, strtok(filename, ".")); //Strtok sets '.' to '\0' 
 
 	read_data(fp, f);
 
