@@ -2,12 +2,13 @@
 
 #include "./cli_parser/cli_parser.h"
 #include "./stego_cfg/stego_cfg.h"
-
+#include "./logger/logger.h"
 
 int main(int argc, char * argv[]) {
-    printf("Hello stego\n\n");
+    log(INFO, "Greetings Commander\n");
     cli_options options = parse_command_line(argc, argv);
 
+    /*
     printf("#### Config ####\n");
     printf("Mode: %s\n", get_mode(options) == EMBED ? "Embed" : "Extract");
     printf("Input: %s\n", get_input_file(options));
@@ -18,7 +19,7 @@ int main(int argc, char * argv[]) {
     printf("Enc Mode: %s\n", get_enc_mode(options));
     printf("Password: %s\n", get_password(options));
     printf("################\n\n");
-
+    */
 
     stego_cfg cfg = create_stego_config(options);
 

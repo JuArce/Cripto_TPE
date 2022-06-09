@@ -4,6 +4,8 @@
 #ifndef __LOGGER_H_
 #define __LOGGER_H_
 
+#include <stdlib.h>
+
 #define RESET_COLOR "\033[0m"
 
 typedef enum {DEBUG=0, INFO, ERROR, FATAL} LOG_LEVEL;

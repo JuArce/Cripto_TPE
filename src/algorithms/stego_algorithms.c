@@ -1,9 +1,21 @@
 #include <stdio.h>
+#include <stdint.h>
 
 #include "./stego_algorithms.h"
+#include "../logger/logger.h"
 
-void lsb1_embed() {
-    printf("lsb 1 embed\n");
+
+#define LSB1_MASK 0xFE
+
+
+void lsb1_embed(uint8_t * carrier, size_t * carrier_size, uint8_t * hide, size_t * hide_size) {
+    if(*hide_size * 8 > *carrier_size) {
+    	log(FATAL, "File to hide can not fit into carrier");
+    }
+
+	for(size_t i = 0; i < *hide_size; i++) {
+		carrier[i] = hide[i];
+	}
 }
 
 void lsb1_extract() {
