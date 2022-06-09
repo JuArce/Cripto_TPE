@@ -19,7 +19,7 @@ file read_file(FILE * fp, char * filename);
 
 void free_file(file f);
 
-void write_file(file f, FILE * fp);
+void write_file(uint8_t * data, size_t size, FILE * fp);
 
 char * get_filename(file f);
 

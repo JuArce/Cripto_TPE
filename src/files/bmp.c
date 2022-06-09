@@ -74,9 +74,10 @@ void free_image(bmp_image image) {
     free(image);
 }
 
-/*void write_image(bmp_image image, FILE * fp) {
-
-}*/
+void write_image(bmp_image image, FILE * fp) {
+  fwrite(&image->header, 1, HEADER_SIZE, fp);
+  fwrite(image->data, 1, get_image_size(image), fp);
+}
 
 uint32_t get_image_size(bmp_image image) {
     return image->header.size - HEADER_SIZE;

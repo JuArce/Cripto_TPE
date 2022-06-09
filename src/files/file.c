@@ -45,7 +45,7 @@ void free_file(file f) {
 	free(f);
 }
 
-void write_file(file f, FILE * fp) {
+void write_file(uint8_t * data, size_t size, FILE * fp) {
 
 }
 

@@ -1,6 +1,8 @@
 #ifndef FILES_H
 #define FILES_H
 
+#include <stdint.h>
+
 #include "bmp.h"
 #include "file.h"
 #include "../cli_parser/cli_parser.h"
@@ -21,7 +23,7 @@ file read_input_file(files f);
 
 void free_input_file(file f);
 
-void write_output_file(files f);
+void write_output_file(files f, uint8_t * data, size_t size, char * extension);
 
 void write_output_image(files f, bmp_image image);
 
