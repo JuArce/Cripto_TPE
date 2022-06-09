@@ -25,6 +25,4 @@ void write_output_file(files f);
 
 void write_output_image(files f, bmp_image image);
 
-/* TODO getters */
-
 #endif

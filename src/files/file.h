@@ -9,6 +9,9 @@ file
 #include <stdint.h>
 
 
+#define BLOCK 256
+
+
 typedef struct file_struct * file;
 
 
@@ -23,5 +26,7 @@ char * get_filename(file f);
 char * get_file_extension(file f);
 
 uint8_t * get_file_data(file f);
+
+size_t get_file_data_size(file f);
 
 #endif

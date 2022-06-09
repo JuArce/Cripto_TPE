@@ -8,7 +8,6 @@
 
 
 typedef struct files_struct {
-	// TODO set correct types for files
 	char * input_file; 
 	char * carrier_file;
 	char * output_file;
