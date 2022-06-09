@@ -4,6 +4,8 @@
 #ifndef __LOGGER_H_
 #define __LOGGER_H_
 
+#define RESET_COLOR "\033[0m"
+
 typedef enum {DEBUG=0, INFO, ERROR, FATAL} LOG_LEVEL;
 
 extern LOG_LEVEL current_level;
@@ -17,7 +19,7 @@ char * level_description(LOG_LEVEL level);
 
 // Debe ser una macro para poder obtener nombre y linea de archivo. 
 #define log(level, fmt, ...)   {if(level >= current_level) {\
-	fprintf (stderr, "%s: %s:%d, ", level_description(level), __FILE__, __LINE__); \
+	fprintf (stderr, "%s%s: %s:%d, ", level_description(level), RESET_COLOR, __FILE__, __LINE__); \
 	fprintf(stderr, fmt, ##__VA_ARGS__); \
 	fprintf(stderr,"\n"); }\
 	if ( level==FATAL) exit(1);}
