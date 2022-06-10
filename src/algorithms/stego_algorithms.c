@@ -1,4 +1,6 @@
 #include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
 
 #include "./stego_algorithms.h"
 #include "../logger/logger.h"
@@ -9,7 +11,7 @@
 
 
 static uint8_t get_i_bit(uint8_t byte, uint8_t i);
-static void set_last_bit(uint8_t * byte, uint8_t value);
+static void set_ls_bit(uint8_t * byte, uint8_t value);
 
 
 void lsb1_embed(uint8_t * carrier, uint32_t * carrier_size, uint8_t * hide, uint32_t * hide_size) {
@@ -19,35 +21,38 @@ void lsb1_embed(uint8_t * carrier, uint32_t * carrier_size, uint8_t * hide, uint
 
     uint32_t i = 0;
     for(uint32_t j = 0; j < *hide_size; j++) {
-        for(int k = 1; k <= 8; k++) {
+        for(int k = 8; k > 0; k--) {
             uint8_t bit = get_i_bit(hide[j], k);
-            set_last_bit(carrier + i++, bit);
+            set_ls_bit(carrier + i++, bit);
         }
     }
 }
 
-/**
-    Return the i_th bit from byte
-    i in range (1, ..., 8)
-*/
-static uint8_t get_i_bit(uint8_t byte, uint8_t i) {
-    return (byte >> (i - 1)) & 1;
-}
+void lsb1_extract(uint8_t * carrier, uint32_t * carrier_size, uint8_t * hidden, uint32_t * hidden_size) {
+    uint32_t file_size = 0;
+    uint32_t data_offset = 8 * sizeof(uint32_t);
 
-/**
-    
-*/
-static void set_last_bit(uint8_t * byte, uint8_t value) {
-    //log(DEBUG, "%d", value);
-    if(value != 0 && value != 1) {
-        log(FATAL, "Invalid bit value");
+    *hidden_size = (*carrier_size) / 8;
+
+    hidden = calloc(1, *hidden_size);
+
+    uint8_t byte = 0;
+    uint32_t hidden_iter = sizeof(uint32_t);
+    for(uint32_t i = 0, j = 0; i < *carrier_size; i++) {
+        uint8_t bit = get_i_bit(carrier[i], 1);
+        byte <<= 1;
+        byte |= bit;
+        j++;
+        if(j % 8 == 0) {
+            j = 0;
+            hidden[hidden_iter++] = byte;
+            if(hidden_iter < 10) printf("%d\n", byte);
+            byte = 0;
+        }
+        
     }
+    printf("%.*s\n", hidden_iter, hidden);
 
-    *byte = (*byte & LSB1_MASK) | value;
-}
-
-void lsb1_extract() {
-    printf("lsb1 extract\n");
 }
 
 void lsb4_embed() {
@@ -64,4 +69,26 @@ void lsbi_embed() {
 
 void lsbi_extract() {
     printf("lsbi extract\n");
+}
+
+
+/**
+    Return the i_th bit from byte
+    i in range (1, ..., 8)
+    1 is the less significative bit
+*/
+static uint8_t get_i_bit(uint8_t byte, uint8_t i) {
+    return (byte >> (i - 1)) & 1;
+}
+
+/**
+    Set the Less Significative bit (ls)
+*/
+static void set_ls_bit(uint8_t * byte, uint8_t value) {
+    //log(DEBUG, "%d", value);
+    if(value != 0 && value != 1) {
+        log(FATAL, "Invalid bit value");
+    }
+
+    *byte = (*byte & LSB1_MASK) | value;
 }

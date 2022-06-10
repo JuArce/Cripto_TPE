@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <stdint.h>
 #include <string.h>
+#include <endian.h>
 
 #include "embed.h"
 #include "../files/bmp.h"
@@ -10,7 +11,6 @@
 
 
 static uint8_t * get_data_to_embed(uint8_t * file_data, uint32_t file_data_size, char * file_extension, uint32_t * embed_size);
-
 
 void embed(files f, stego_strategy stego_strategy_fn) {
     log(INFO, "Embeding file, please wait...");
@@ -47,7 +47,9 @@ static uint8_t * get_data_to_embed(uint8_t * file_data, uint32_t file_data_size,
     uint32_t data_offset = sizeof(uint32_t);
     uint32_t extension_offset = data_offset + file_data_size;
     
-    memcpy(to_hide_data, &file_data_size, sizeof(uint32_t));
+    uint32_t be_data_size = htobe32(file_data_size);
+
+    memcpy(to_hide_data, &be_data_size, sizeof(uint32_t));
     memcpy(to_hide_data + data_offset, file_data, file_data_size);
     memcpy(to_hide_data + extension_offset, file_extension, strlen(file_extension));
 
