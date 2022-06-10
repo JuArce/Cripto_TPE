@@ -55,7 +55,7 @@ static void check_bmp_header(bmp_image image);
     Do not close the file.
 */
 bmp_image read_image(FILE * fp) {
-    log(INFO, "Reading bmp image");
+    log(DEBUG, "Reading bmp image");
     bmp_image image = calloc(1, sizeof(bmp_image_struct));
 
     if(NULL == image) {

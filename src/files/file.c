@@ -9,14 +9,14 @@ typedef struct file_struct {
 	char * filename;
 	char * extension;
 	uint8_t * data;
-	size_t data_size;
+	uint32_t data_size;
 } file_struct;
 
 
 static void set_filename(file f, char * filename);
 static void set_extension(file f, char * extension);
 static void read_data(FILE * fp, file f);
-static void resize_data(file f, size_t size);
+static void resize_data(file f, uint32_t size);
 
 
 /**
@@ -45,7 +45,7 @@ void free_file(file f) {
 	free(f);
 }
 
-void write_file(uint8_t * data, size_t size, FILE * fp) {
+void write_file(uint8_t * data, uint32_t size, FILE * fp) {
 
 }
 
@@ -61,7 +61,7 @@ uint8_t * get_file_data(file f) {
 	return f->data;
 }
 
-size_t get_file_data_size(file f) {
+uint32_t get_file_data_size(file f) {
 	return f->data_size;
 }
 
@@ -92,6 +92,6 @@ static void read_data(FILE * fp, file f) {
 	resize_data(f, f->data_size);
 }
 
-static void resize_data(file f, size_t size) {
+static void resize_data(file f, uint32_t size) {
 	f->data = realloc(f->data, size);
 }

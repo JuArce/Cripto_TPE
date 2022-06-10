@@ -14,7 +14,7 @@ file read_file(FILE * fp, char * filename);
 
 void free_file(file f);
 
-void write_file(uint8_t * data, size_t size, FILE * fp);
+void write_file(uint8_t * data, uint32_t size, FILE * fp);
 
 char * get_filename(file f);
 
@@ -22,6 +22,6 @@ char * get_file_extension(file f);
 
 uint8_t * get_file_data(file f);
 
-size_t get_file_data_size(file f);
+uint32_t get_file_data_size(file f);
 
 #endif
