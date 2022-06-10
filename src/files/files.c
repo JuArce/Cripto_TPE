@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <stddef.h>
+#include <string.h>
 
 #include "files.h"
 #include "bmp.h"
@@ -72,7 +73,24 @@ void free_input_file(file f) {
 }
 
 void write_output_file(files f, uint8_t * data, size_t size, char * extension) {
+	if(NULL == f->output_file) {
+		//TODO Handle error
+	}
 
+	char * filename = calloc(1, strlen(f->output_file) + strlen(extension) + 1);
+	strcat(filename, f->output_file);
+	strcat(filename, extension);
+
+	FILE * output = fopen(filename, "w");
+
+	if(NULL == output) {
+		//TODO Handle error
+	}
+
+	write_file(data, size, output);
+
+	free(filename);
+	fclose(output);
 }
 
 void write_output_image(files f, bmp_image image) {

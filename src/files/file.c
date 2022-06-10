@@ -46,7 +46,7 @@ void free_file(file f) {
 }
 
 void write_file(uint8_t * data, uint32_t size, FILE * fp) {
-
+	fwrite(data, 1, size, fp);
 }
 
 char * get_filename(file f) {

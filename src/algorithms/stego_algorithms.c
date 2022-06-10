@@ -14,45 +14,41 @@ static uint8_t get_i_bit(uint8_t byte, uint8_t i);
 static void set_ls_bit(uint8_t * byte, uint8_t value);
 
 
-void lsb1_embed(uint8_t * carrier, uint32_t * carrier_size, uint8_t * hide, uint32_t * hide_size) {
-    if(*hide_size * 8 > *carrier_size) {
+void lsb1_embed(uint8_t * carrier, uint32_t carrier_size, uint8_t ** hide, uint32_t * hide_size) {
+    if(*hide_size * 8 > carrier_size) {
         log(FATAL, "File to hide can not fit into carrier");
     }
 
     uint32_t i = 0;
     for(uint32_t j = 0; j < *hide_size; j++) {
         for(int k = 8; k > 0; k--) {
-            uint8_t bit = get_i_bit(hide[j], k);
+            uint8_t bit = get_i_bit((*hide)[j], k);
             set_ls_bit(carrier + i++, bit);
         }
     }
 }
 
-void lsb1_extract(uint8_t * carrier, uint32_t * carrier_size, uint8_t * hidden, uint32_t * hidden_size) {
-    uint32_t file_size = 0;
-    uint32_t data_offset = 8 * sizeof(uint32_t);
+void lsb1_extract(uint8_t * carrier, uint32_t carrier_size, uint8_t ** hidden, uint32_t * hidden_size) {
+    *hidden_size = carrier_size / 8;
 
-    *hidden_size = (*carrier_size) / 8;
-
-    hidden = calloc(1, *hidden_size);
+    *hidden = calloc(1, *hidden_size);
+    if(NULL == *hidden) {
+        log(FATAL, " "); //TODO Handle error
+    }
 
     uint8_t byte = 0;
-    uint32_t hidden_iter = sizeof(uint32_t);
-    for(uint32_t i = 0, j = 0; i < *carrier_size; i++) {
+    uint32_t hidden_iter = 0;
+    for(uint32_t i = 0, j = 0; i < carrier_size; i++) {
         uint8_t bit = get_i_bit(carrier[i], 1);
         byte <<= 1;
         byte |= bit;
         j++;
         if(j % 8 == 0) {
             j = 0;
-            hidden[hidden_iter++] = byte;
-            if(hidden_iter < 10) printf("%d\n", byte);
+            (*hidden)[hidden_iter++] = byte;
             byte = 0;
-        }
-        
+        }   
     }
-    printf("%.*s\n", hidden_iter, hidden);
-
 }
 
 void lsb4_embed() {
