@@ -11,10 +11,10 @@
 
 void extract(files f, stego_strategy stego_strategy_fn) {
     log(INFO, "Extracting file, please wait...");
-	
-	bmp_image image = read_carrier_file(f);
+    
+    bmp_image image = read_carrier_file(f);
 
-	uint8_t * image_data = get_image_data(image);
+    uint8_t * image_data = get_image_data(image);
     uint32_t image_data_size = get_image_size(image);
 
     uint8_t * hidden_data = NULL;
@@ -26,15 +26,15 @@ void extract(files f, stego_strategy stego_strategy_fn) {
     memcpy(&data_size, hidden_data, sizeof(uint32_t));
     data_size = be32toh(data_size);
 
-	uint32_t data_offset = sizeof(uint32_t);
+    uint32_t data_offset = sizeof(uint32_t);
     uint32_t extension_offset = data_offset + data_size;
 
     uint8_t * data = calloc(1, data_size);
     memcpy(data, hidden_data + data_offset, data_size);
 
     char * extension = (char *)hidden_data + extension_offset;
-   	
-   	write_output_file(f, data, data_size, extension);
+    
+    write_output_file(f, data, data_size, extension);
 
     free(hidden_data);
     free(data);
