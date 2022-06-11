@@ -28,4 +28,6 @@ crypto_cfg create_crypto_config(cli_options options);
 
 void free_crypto_config(crypto_cfg config);
 
+void run_crypto_config(crypto_cfg config, unsigned char * input, int input_len, unsigned char * output);
+
 #endif

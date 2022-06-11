@@ -13,7 +13,7 @@
 
 static uint8_t * get_data_to_embed(uint8_t * file_data, uint32_t file_data_size, char * file_extension, uint32_t * embed_size);
 
-void embed(files f, stego_strategy stego_strategy_fn) {
+void embed(files f, stego_strategy stego_strategy_fn, crypto_cfg crypto_cfg_ptr) {
     log(INFO, "Embeding file, please wait...");
 
     bmp_image image = read_carrier_file(f);

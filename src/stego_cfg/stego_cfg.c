@@ -13,6 +13,7 @@
 #include "../strategy/stego_strategy.h"
 #include "../crypto_cfg/crypto_cfg.h"
 
+
 typedef struct stego_cfg_struct {
     int mode;
     mode_strategy mode_strategy_fn;
@@ -46,7 +47,7 @@ void free_stego_config(stego_cfg config) {
 }
 
 void run_stego_config(stego_cfg config) {
-    config->mode_strategy_fn(config->files_ptr, config->stego_strategy_fn);
+    config->mode_strategy_fn(config->files_ptr, config->stego_strategy_fn, config->crypto_cfg_ptr);
 }
 
 static void set_stego_mode(stego_cfg config, int mode) {

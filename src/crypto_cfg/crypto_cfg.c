@@ -46,6 +46,11 @@ static void set_crypto_algo(crypto_cfg config, char * algo, char * algo_mode);
 
 
 crypto_cfg create_crypto_config(cli_options options) {
+    if(NULL == get_password(options)) {
+        log(ERROR, "Missing password, skipping %s", get_mode(options) == EMBED ? "encryption" : "decryption")
+        return NULL;
+    }
+
     crypto_cfg config = calloc(1, sizeof(crypto_cfg_struct));
 
     if(NULL == config) log(FATAL, "%s", strerror(errno));
@@ -61,19 +66,21 @@ void free_crypto_config(crypto_cfg config) {
     free(config);
 }
 
-
+void run_crypto_config(crypto_cfg config, unsigned char * input, int input_len, unsigned char * output) {
+    config->crypto_mode_strategy_fn(input, input_len, output, config->password, config->crypto_algo_strategy_fn);
+}
 
 static void set_crypto_mode(crypto_cfg config, int mode) {
     switch (mode) {
-    case EMBED:
-        config->crypto_mode_strategy_fn = encrypt;
-        break;
-    case EXTRACT:
-        config->crypto_mode_strategy_fn = decrypt;
-        break;
-    default:
-        log(FATAL, "Invalid cryptography mode");
-    }
+        case EMBED:
+            config->crypto_mode_strategy_fn = encrypt;
+            break;
+        case EXTRACT:
+            config->crypto_mode_strategy_fn = decrypt;
+            break;
+        default:
+            log(FATAL, "Invalid cryptography mode");
+        }
 }
 
 static void set_crypto_algo(crypto_cfg config, char * algo, char * algo_mode) {

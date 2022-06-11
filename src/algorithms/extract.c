@@ -11,7 +11,7 @@
 #include "../logger/logger.h"
 
 
-void extract(files f, stego_strategy stego_strategy_fn) {
+void extract(files f, stego_strategy stego_strategy_fn, crypto_cfg crypto_cfg_ptr) {
     log(INFO, "Extracting file, please wait...");
     
     bmp_image image = read_carrier_file(f);
