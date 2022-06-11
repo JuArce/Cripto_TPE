@@ -1,6 +1,8 @@
-#ifndef _CRYPTO_ALGO_STRATEGY__
-#define _CRYPTO_ALGO_STRATEGY__
+#ifndef CRYPTO_ALGO_STRATEGY_H
+#define CRYPTO_ALGO_STRATEGY_H
 
-typedef void (* crypto_algo_strategy)();
+#include <openssl/evp.h>
+
+typedef const EVP_CIPHER * (* crypto_algo_strategy) ();
 
 #endif

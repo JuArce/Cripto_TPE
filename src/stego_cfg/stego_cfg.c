@@ -18,7 +18,7 @@ typedef struct stego_cfg_struct {
     mode_strategy mode_strategy_fn;
     stego_strategy stego_strategy_fn;
     files files_ptr;
-    crypto_cfg crypto;
+    crypto_cfg crypto_cfg_ptr;
 } stego_cfg_struct;
 
 
@@ -35,11 +35,13 @@ stego_cfg create_stego_config(cli_options options) {
     set_stego_mode(config, get_mode(options));
     set_stego_strategy(config, get_stego_algo(options));
     set_files(config, options);
+    config->crypto_cfg_ptr = create_crypto_config(options);
     return config;
 }
 
 void free_stego_config(stego_cfg config) {
     free_files_struct(config->files_ptr);
+    free_crypto_config(config->crypto_cfg_ptr);
     free(config);
 }
 

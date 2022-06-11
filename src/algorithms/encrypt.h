@@ -1,6 +1,8 @@
-#ifndef _ENCRYPT_H__
-#define _ENCRYPT_H__
+#ifndef ENCRYPT_H
+#define ENCRYPT_H
 
-void encrypt();
+#include "../strategy/crypto_algo_strategy.h"
+
+void encrypt(unsigned char * plaintext, int plaintext_len, unsigned char * cyphertext, char * password, crypto_algo_strategy crypto_algo_fn);
 
 #endif

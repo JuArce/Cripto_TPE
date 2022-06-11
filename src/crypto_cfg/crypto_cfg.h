@@ -1,28 +1,31 @@
-#ifndef _CRYPTO_CFG__
-#define _CRYPTO_CFG__
+#ifndef CRYPTO_CFG_H
+#define CRYPTO_CFG_H
 
-#include "../cli_parser/cli_parser.h"  
+#include "../cli_parser/cli_parser.h" 
+#include "../strategy/crypto_algo_strategy.h" 
 
+
+#define AES128  "aes128"
+#define AES192  "aes192"
+#define AES256  "aes256"
+#define DES     "des"
+
+#define ECB "ecb"
+#define CFB "cfb"
+#define OFB "ofb"
+#define CBC "cbc"
 
 enum crypto_mode {
     ENCRYPT_MODE,
     DECRYPT_MODE
 };
 
-enum crypto_algo {
-    aes128 = 0,
-    aes192,
-    aes256,
-    des
-};
-
-enum crypto_algo_mode {
-    ecb = 0,
-    cfb,
-    ofb,
-    cbc
-};
 
 typedef struct crypto_cfg_struct * crypto_cfg;
+
+
+crypto_cfg create_crypto_config(cli_options options);
+
+void free_crypto_config(crypto_cfg config);
 
 #endif

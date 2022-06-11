@@ -1,6 +1,8 @@
-#ifndef _CRYPTO_MODE_STRATEGY__
-#define _CRYPTO_MODE_STRATEGY__
+#ifndef CRYPTO_MODE_STRATEGY_H
+#define CRYPTO_MODE_STRATEGY_H
 
-typedef void (* crypto_mode_strategy)();
+#include "crypto_algo_strategy.h"
+
+typedef void (* crypto_mode_strategy) (unsigned char *, int, unsigned char *, char *, crypto_algo_strategy);
 
 #endif
