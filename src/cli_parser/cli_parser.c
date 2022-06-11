@@ -26,8 +26,8 @@ typedef struct cli_options_struct {
     char * input_file;
     char * carrier_file;
     char * output_file;
-    char * stego_alg; // < LSB1 | LSB4 | LSBI >
-    char * enc_alg; // < aes128 | aes196 | aes256 | des >
+    char * stego_algo; // < LSB1 | LSB4 | LSBI >
+    char * enc_algo; // < aes128 | aes196 | aes256 | des >
     char * enc_mode; // < ecb | cfb | ofb | cbc >
     char * password;
 } cli_options_struct;
@@ -68,10 +68,10 @@ cli_options parse_command_line(int argc, char * argv[]) {
                 options->output_file = optarg;
                 break;
             case STEG:
-                options->stego_alg = optarg;
+                options->stego_algo = optarg;
                 break;
             case A:
-                options->enc_alg = optarg;
+                options->enc_algo = optarg;
                 break;
             case M:
                 options->enc_mode = optarg;
@@ -117,12 +117,12 @@ char * get_output_file(cli_options options) {
     return options->output_file;
 }
 
-char * get_stego_alg(cli_options options) {
-    return options->stego_alg;
+char * get_stego_algo(cli_options options) {
+    return options->stego_algo;
 }
 
-char * get_enc_alg(cli_options options) {
-    return options->enc_alg;
+char * get_enc_algo(cli_options options) {
+    return options->enc_algo;
 }
 
 char * get_enc_mode(cli_options options) {

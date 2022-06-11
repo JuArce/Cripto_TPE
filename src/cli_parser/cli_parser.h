@@ -31,9 +31,9 @@ char * get_carrier_file(cli_options options);
 
 char * get_output_file(cli_options options);
 
-char * get_stego_alg(cli_options options);
+char * get_stego_algo(cli_options options);
 
-char * get_enc_alg(cli_options options);
+char * get_enc_algo(cli_options options);
 
 char * get_enc_mode(cli_options options);
 

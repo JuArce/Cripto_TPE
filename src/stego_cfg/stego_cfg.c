@@ -11,13 +11,14 @@
 #include "../logger/logger.h"
 #include "../strategy/mode_strategy.h"
 #include "../strategy/stego_strategy.h"
+#include "../crypto_cfg/crypto_cfg.h"
 
 typedef struct stego_cfg_struct {
     int mode;
     mode_strategy mode_strategy_fn;
     stego_strategy stego_strategy_fn;
     files files_ptr;
-    //TODO add cryptography
+    crypto_cfg crypto;
 } stego_cfg_struct;
 
 
@@ -32,7 +33,7 @@ stego_cfg create_stego_config(cli_options options) {
     if(NULL == config) log(FATAL, "%s", strerror(errno));
 
     set_stego_mode(config, get_mode(options));
-    set_stego_strategy(config, get_stego_alg(options));
+    set_stego_strategy(config, get_stego_algo(options));
     set_files(config, options);
     return config;
 }
@@ -61,25 +62,25 @@ static void set_stego_mode(stego_cfg config, int mode) {
     }
 }
 
-static void set_stego_strategy(stego_cfg config, char * stego_alg) {
+static void set_stego_strategy(stego_cfg config, char * stego_algo) {
     switch(config->mode) {
         case EMBED_MODE:
-            if(strcmp(stego_alg, LSB1) == 0) {
+            if(strcmp(stego_algo, LSB1) == 0) {
                 config->stego_strategy_fn = lsb1_embed;
-            } else if(strcmp(stego_alg, LSB4) == 0) {
+            } else if(strcmp(stego_algo, LSB4) == 0) {
                 config->stego_strategy_fn = lsb4_embed;
-            } else if(strcmp(stego_alg, LSBI) == 0) {
+            } else if(strcmp(stego_algo, LSBI) == 0) {
                 config->stego_strategy_fn = lsbi_embed;
             } else {
                 log(FATAL, "Invalid steganography algorithm");
             }
             break;
         case EXTRACT_MODE:
-            if(strcmp(stego_alg, LSB1) == 0) {
+            if(strcmp(stego_algo, LSB1) == 0) {
                 config->stego_strategy_fn = lsb1_extract;
-            } else if(strcmp(stego_alg, LSB4) == 0) {
+            } else if(strcmp(stego_algo, LSB4) == 0) {
                 config->stego_strategy_fn = lsb4_extract;
-            } else if(strcmp(stego_alg, LSBI) == 0) {
+            } else if(strcmp(stego_algo, LSBI) == 0) {
                 config->stego_strategy_fn = lsbi_extract;
             } else {
                 log(FATAL, "Invalid steganography algorithm");
