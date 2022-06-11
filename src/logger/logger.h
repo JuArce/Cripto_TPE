@@ -26,3 +26,4 @@ char * level_description(LOG_LEVEL level);
 	fprintf(stderr,"\n"); }\
 	if ( level==FATAL) exit(1);}
 #endif
+	
