@@ -1,9 +1,10 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include <stddef.h>
+#include <string.h>
+#include <errno.h>
 
 #include "cli_parser.h"
-
+#include "../logger/logger.h"
 
 static struct option long_options[] = {
    {"embed",    no_argument,        0,  EMBED   },
@@ -38,10 +39,8 @@ static void print_help();
 cli_options parse_command_line(int argc, char * argv[]) {
     cli_options options = calloc(1, sizeof(cli_options_struct));
 
-    if (NULL == options) {
-        // TODO handle error        
-    }
-
+    if (NULL == options) log(FATAL, "%s", strerror(errno));        
+    
     int c = 0;
     //int digit_optind = 0;
 

@@ -1,13 +1,14 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <stddef.h>
+#include <errno.h>
 
 #include "stego_cfg.h"
 #include "../algorithms/embed.h"
 #include "../algorithms/extract.h"
 #include "../algorithms/stego_algorithms.h"
 #include "../files/files.h"
+#include "../logger/logger.h"
 #include "../strategy/mode_strategy.h"
 #include "../strategy/stego_strategy.h"
 
@@ -28,9 +29,7 @@ static void set_files(stego_cfg config, cli_options options);
 stego_cfg create_stego_config(cli_options options) {
     stego_cfg config = calloc(1, sizeof(stego_cfg_struct));
 
-    if(NULL == config) {
-        //TODO Handle error
-    }
+    if(NULL == config) log(FATAL, "%s", strerror(errno));
 
     set_stego_mode(config, get_mode(options));
     set_stego_strategy(config, get_stego_alg(options));
@@ -58,8 +57,7 @@ static void set_stego_mode(stego_cfg config, int mode) {
             config->mode_strategy_fn = extract;
             break;
         default:
-            printf("%s\n", "error");
-            //TODO Handle error and delete printf
+            log(FATAL, "Invalid steganography mode");
     }
 }
 
@@ -73,7 +71,7 @@ static void set_stego_strategy(stego_cfg config, char * stego_alg) {
             } else if(strcmp(stego_alg, LSBI) == 0) {
                 config->stego_strategy_fn = lsbi_embed;
             } else {
-                //TODO Handle error
+                log(FATAL, "Invalid steganography algorithm");
             }
             break;
         case EXTRACT_MODE:
@@ -84,12 +82,11 @@ static void set_stego_strategy(stego_cfg config, char * stego_alg) {
             } else if(strcmp(stego_alg, LSBI) == 0) {
                 config->stego_strategy_fn = lsbi_extract;
             } else {
-                //TODO Handle error
+                log(FATAL, "Invalid steganography algorithm");
             }
             break;
         default:
-            printf("%s\n", "error");
-            //TODO Handle error and delete printf
+            log(FATAL, "Invalid steganography mode");
     }
 }
 

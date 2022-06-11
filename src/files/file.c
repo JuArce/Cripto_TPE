@@ -1,8 +1,10 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <errno.h>
 
 #include "file.h"
+#include "../logger/logger.h"
 
 
 typedef struct file_struct {
@@ -26,9 +28,7 @@ static void resize_data(file f, uint32_t size);
 file read_file(FILE * fp, char * filename) {
 	file f = calloc(1, sizeof(file_struct));
 
-	if(NULL == f) {
-		//TODO handle error
-	}
+	if(NULL == f) log(FATAL, "%s", strerror(errno));
 
 	set_extension(f, strchr(filename, '.')); //The order of these operations is important
 	set_filename(f, strtok(filename, ".")); //Strtok sets '.' to '\0' 
@@ -67,11 +67,13 @@ uint32_t get_file_data_size(file f) {
 
 static void set_filename(file f, char * filename) {
 	f->filename = calloc(1, strlen(filename) + 1);
+	if(NULL == f->filename) log(FATAL, "%s", strerror(errno));
 	strcpy(f->filename, filename);
 }
 
 static void set_extension(file f, char * extension) {
 	f->extension = calloc(1, strlen(extension) + 1);
+	if(NULL == f->extension) log(FATAL, "%s", strerror(errno));
 	strcpy(f->extension, extension);
 }
 
@@ -94,4 +96,5 @@ static void read_data(FILE * fp, file f) {
 
 static void resize_data(file f, uint32_t size) {
 	f->data = realloc(f->data, size);
+	if(NULL == f->data) log(FATAL, "%s", strerror(errno));
 }

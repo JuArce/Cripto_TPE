@@ -1,8 +1,9 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include <stdint.h>
 #include <string.h>
+#include <stdint.h>
 #include <endian.h>
+#include <errno.h>
 
 #include "embed.h"
 #include "../files/bmp.h"
@@ -43,6 +44,7 @@ void embed(files f, stego_strategy stego_strategy_fn) {
 static uint8_t * get_data_to_embed(uint8_t * file_data, uint32_t file_data_size, char * file_extension, uint32_t * embed_size) {
     *embed_size = sizeof(uint32_t) + file_data_size + strlen(file_extension) + 1;
     uint8_t * to_hide_data = calloc(1, *embed_size);
+    if(NULL == to_hide_data) log(FATAL, "%s", strerror(errno));
 
     uint32_t data_offset = sizeof(uint32_t);
     uint32_t extension_offset = data_offset + file_data_size;

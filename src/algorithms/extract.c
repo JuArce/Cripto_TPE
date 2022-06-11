@@ -1,7 +1,9 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <stdint.h>
 #include <endian.h>
+#include <errno.h>
 
 #include "extract.h"
 #include "../files/bmp.h"
@@ -30,6 +32,7 @@ void extract(files f, stego_strategy stego_strategy_fn) {
     uint32_t extension_offset = data_offset + data_size;
 
     uint8_t * data = calloc(1, data_size);
+    if(NULL == data) log(FATAL, "%s", strerror(errno));
     memcpy(data, hidden_data + data_offset, data_size);
 
     char * extension = (char *)hidden_data + extension_offset;

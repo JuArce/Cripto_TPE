@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <errno.h>
 
 #include "./stego_algorithms.h"
 #include "../logger/logger.h"
@@ -15,9 +16,7 @@ static void set_ls_bit(uint8_t * byte, uint8_t value);
 
 
 void lsb1_embed(uint8_t * carrier, uint32_t carrier_size, uint8_t ** hide, uint32_t * hide_size) {
-    if(*hide_size * 8 > carrier_size) {
-        log(FATAL, "File to hide can not fit into carrier");
-    }
+    if(*hide_size * 8 > carrier_size) log(FATAL, "File to hide can not fit into carrier");
 
     uint32_t i = 0;
     for(uint32_t j = 0; j < *hide_size; j++) {
@@ -32,9 +31,7 @@ void lsb1_extract(uint8_t * carrier, uint32_t carrier_size, uint8_t ** hidden, u
     *hidden_size = carrier_size / 8;
 
     *hidden = calloc(1, *hidden_size);
-    if(NULL == *hidden) {
-        log(FATAL, " "); //TODO Handle error
-    }
+    if(NULL == *hidden) log(FATAL, "%s", strerror(errno));
 
     uint8_t byte = 0;
     uint32_t hidden_iter = 0;

@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <errno.h>
 
 #include "bmp.h"
 #include "../logger/logger.h"
@@ -58,9 +59,7 @@ bmp_image read_image(FILE * fp) {
     log(DEBUG, "Reading bmp image");
     bmp_image image = calloc(1, sizeof(bmp_image_struct));
 
-    if(NULL == image) {
-        //TODO handle error
-    }
+    if(NULL == image) log(FATAL, "%s", strerror(errno));
 
     read_header(fp, image);
     check_bmp_header(image);
