@@ -29,10 +29,20 @@ void embed(files f, stego_strategy stego_strategy_fn, crypto_cfg crypto_cfg_ptr)
     uint32_t to_hide_size = 0;
     uint8_t * to_hide_data = get_data_to_embed(file_data, file_data_size, file_extension, &to_hide_size);
 
-    /*
-        Encriptar
-    */
+    if(NULL != crypto_cfg_ptr) {
+        uint32_t ciphertext_size;
 
+        uint8_t * ciphertext = run_crypto_config(crypto_cfg_ptr, to_hide_data, to_hide_size, &ciphertext_size);
+        free(to_hide_data);
+
+        to_hide_size = sizeof(uint32_t) + ciphertext_size;
+        to_hide_data = calloc(1, to_hide_size);
+        
+        ((uint32_t *) to_hide_data)[0] = htobe32(ciphertext_size);
+        memcpy(to_hide_data + sizeof(uint32_t), ciphertext, ciphertext_size);
+
+        free(ciphertext);    
+    }
     
     stego_strategy_fn(image_data, image_data_size, &to_hide_data, &to_hide_size);
 
