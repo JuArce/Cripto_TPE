@@ -7,7 +7,9 @@
 #include "decrypt.h"
 #include "../logger/logger.h"
 
+
 #define MAX_SIZE 64 * 1024 * 1024
+
 
 unsigned char * decrypt(unsigned char * ciphertext , uint32_t ciphertext_len, char * password, uint32_t * output_len, crypto_algo_strategy crypto_algo_fn, uint32_t key_size) {
     log(INFO, "Decrypting file, please wait...");
@@ -23,19 +25,19 @@ unsigned char * decrypt(unsigned char * ciphertext , uint32_t ciphertext_len, ch
     EVP_BytesToKey(crypto_algo_fn(), EVP_sha256(), NULL, (unsigned char *)password, strlen(password), 1, key, iv);
 
     if(1 != EVP_DecryptInit_ex(ctx, crypto_algo_fn(), NULL, key, iv)) {
-        log(FATAL, "%s", strerror(errno));
+        log(FATAL, "EVP Decrypt Init ex failed");
     }
 
     unsigned char * output = calloc(1, MAX_SIZE);
     if(NULL == output) log(FATAL, "%s", strerror(errno));
 
     if(1 != EVP_DecryptUpdate(ctx, output, &len, ciphertext, ciphertext_len)) {
-        log(FATAL, "%s", strerror(errno));
+        log(FATAL, "EVP Decrypt Update failed");
     }
     *output_len = len;
 
     if(1 != EVP_DecryptFinal_ex(ctx, output + len, &len)) {
-        log(FATAL, "%s", strerror(errno));
+        log(FATAL, "EVP Decrypt Final ex failed");
     }
     *output_len += len;
 

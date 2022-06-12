@@ -31,6 +31,7 @@ void extract(files f, stego_strategy stego_strategy_fn, crypto_cfg crypto_cfg_pt
 
         uint8_t * plaintext = run_crypto_config(crypto_cfg_ptr, hidden_data + sizeof(uint32_t), cipher_size, &plaintext_size);
         free(hidden_data);
+        
         hidden_data = plaintext;
         hidden_data_size = plaintext_size;
     }
