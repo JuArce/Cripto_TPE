@@ -30,9 +30,7 @@ void extract(files f, stego_strategy stego_strategy_fn, crypto_cfg crypto_cfg_pt
     if(NULL != crypto_cfg_ptr) {
         uint32_t plaintext_size;
 
-        uint32_t cipher_size; 
-        memcpy(&cipher_size, hidden_data, sizeof(uint32_t));
-        cipher_size = be32toh(cipher_size);
+        uint32_t cipher_size = be32toh(((uint32_t *)hidden_data)[0]);
 
         uint8_t * plaintext = run_crypto_config(crypto_cfg_ptr, hidden_data + sizeof(uint32_t), cipher_size, &plaintext_size);
         free(hidden_data);
@@ -40,9 +38,7 @@ void extract(files f, stego_strategy stego_strategy_fn, crypto_cfg crypto_cfg_pt
         hidden_data_size = plaintext_size;
     }
 
-    uint32_t data_size; 
-    memcpy(&data_size, hidden_data, sizeof(uint32_t));
-    data_size = be32toh(data_size);
+    uint32_t data_size = be32toh(((uint32_t *)hidden_data)[0]);
 
     uint32_t data_offset = sizeof(uint32_t);
     uint32_t extension_offset = data_offset + data_size;
