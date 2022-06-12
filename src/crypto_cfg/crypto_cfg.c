@@ -108,7 +108,7 @@ static void set_crypto_algo(crypto_cfg config, char * algo, char * algo_mode) {
     } else if(strcmp(algo_mode, CBC) == 0) {
         crypto_algo_mode = cbc;
     }
-    uint32_t KEY_SIZE[] = {128 / 8, 192 / 8, 256 / 8, 64 / 8};
+    uint32_t KEY_SIZE[] = {16, 24, 32, 8}; /* KEY_SIZE is in bytes. ie: aes128 key_size = 128bits/8 */
     config->crypto_algo_strategy_fn = evp_cypto_fns[crypto_algo][crypto_algo_mode];
     config->key_size = KEY_SIZE[crypto_algo];
 }
