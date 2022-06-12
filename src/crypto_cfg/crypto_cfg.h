@@ -1,5 +1,6 @@
 #ifndef CRYPTO_CFG_H
 #define CRYPTO_CFG_H
+#include <stdint.h>
 
 #include "../cli_parser/cli_parser.h" 
 #include "../strategy/crypto_algo_strategy.h" 
@@ -28,6 +29,6 @@ crypto_cfg create_crypto_config(cli_options options);
 
 void free_crypto_config(crypto_cfg config);
 
-void run_crypto_config(crypto_cfg config, unsigned char * input, int input_len, unsigned char * output);
+unsigned char * run_crypto_config(crypto_cfg config, unsigned char * input, uint32_t input_len, uint32_t * output_len);
 
 #endif

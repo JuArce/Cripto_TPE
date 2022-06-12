@@ -38,6 +38,7 @@ typedef struct crypto_cfg_struct {
     crypto_mode_strategy crypto_mode_strategy_fn;
     crypto_algo_strategy crypto_algo_strategy_fn;
     char * password;
+    uint32_t key_size;
 } crypto_cfg_struct;
 
 
@@ -66,8 +67,8 @@ void free_crypto_config(crypto_cfg config) {
     free(config);
 }
 
-void run_crypto_config(crypto_cfg config, unsigned char * input, int input_len, unsigned char * output) {
-    config->crypto_mode_strategy_fn(input, input_len, output, config->password, config->crypto_algo_strategy_fn);
+unsigned char * run_crypto_config(crypto_cfg config, unsigned char * input, uint32_t input_len, uint32_t * output_len) {
+    return config->crypto_mode_strategy_fn(input, input_len, config->password, output_len, config->crypto_algo_strategy_fn, config->key_size);
 }
 
 static void set_crypto_mode(crypto_cfg config, int mode) {
@@ -89,6 +90,7 @@ static void set_crypto_algo(crypto_cfg config, char * algo, char * algo_mode) {
 
     if(strcmp(algo, AES128) == 0) {
         crypto_algo = aes128;
+
     } else if(strcmp(algo, AES192) == 0) {
         crypto_algo = aes192;
     } else if(strcmp(algo, AES256) == 0) {
@@ -106,6 +108,7 @@ static void set_crypto_algo(crypto_cfg config, char * algo, char * algo_mode) {
     } else if(strcmp(algo_mode, CBC) == 0) {
         crypto_algo_mode = cbc;
     }
-
+    uint32_t KEY_SIZE[] = {128 / 8, 192 / 8, 256 / 8, 64 / 8};
     config->crypto_algo_strategy_fn = evp_cypto_fns[crypto_algo][crypto_algo_mode];
+    config->key_size = KEY_SIZE[crypto_algo];
 }
