@@ -24,9 +24,6 @@ void extract(files f, stego_strategy stego_strategy_fn, crypto_cfg crypto_cfg_pt
 
     stego_strategy_fn(image_data, image_data_size, &hidden_data, &hidden_data_size);
 
-    /*
-    desencriptar
-    */
     if(NULL != crypto_cfg_ptr) {
         uint32_t plaintext_size;
 
