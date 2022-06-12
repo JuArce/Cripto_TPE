@@ -39,7 +39,9 @@ void extract(files f, stego_strategy stego_strategy_fn, crypto_cfg crypto_cfg_pt
     uint32_t data_size = be32toh(((uint32_t *)hidden_data)[0]);
     uint8_t * data = hidden_data + sizeof(uint32_t);
     char * extension = (char *)hidden_data + sizeof(uint32_t) + data_size;
-    
+
+    if(data_size > hidden_data_size) log(FATAL, "Invalid data size");
+
     write_output_file(f, data, data_size, extension);
 
     free(hidden_data);

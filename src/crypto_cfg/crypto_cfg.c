@@ -48,7 +48,7 @@ static void set_crypto_algo(crypto_cfg config, char * algo, char * algo_mode);
 
 crypto_cfg create_crypto_config(cli_options options) {
     if(NULL == get_password(options)) {
-        log(ERROR, "Missing password, skipping %s", get_mode(options) == EMBED ? "encryption" : "decryption")
+        log(INFO, "Missing password, skipping %s", get_mode(options) == EMBED ? "encryption" : "decryption")
         return NULL;
     }
 
