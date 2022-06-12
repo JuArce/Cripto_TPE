@@ -39,20 +39,12 @@ void extract(files f, stego_strategy stego_strategy_fn, crypto_cfg crypto_cfg_pt
     }
 
     uint32_t data_size = be32toh(((uint32_t *)hidden_data)[0]);
-
-    uint32_t data_offset = sizeof(uint32_t);
-    uint32_t extension_offset = data_offset + data_size;
-
-    uint8_t * data = calloc(1, data_size);
-    if(NULL == data) log(FATAL, "%s", strerror(errno));
-    memcpy(data, hidden_data + data_offset, data_size);
-
-    char * extension = (char *)hidden_data + extension_offset;
+    uint8_t * data = hidden_data + sizeof(uint32_t);
+    char * extension = (char *)hidden_data + sizeof(uint32_t) + data_size;
     
     write_output_file(f, data, data_size, extension);
 
     free(hidden_data);
-    free(data);
     free_carrier_file(image);
 
     log(INFO, "File extracted correctly");
