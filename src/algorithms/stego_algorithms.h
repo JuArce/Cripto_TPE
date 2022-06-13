@@ -14,6 +14,6 @@ void lsb4_extract(uint8_t * carrier, uint32_t carrier_size, uint8_t ** hidden, u
 
 void lsbi_embed();
 
-void lsbi_extract();
+void lsbi_extract(uint8_t * carrier, uint32_t carrier_size, uint8_t ** hidden, uint32_t * hidden_size);
 
 #endif
