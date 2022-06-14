@@ -88,26 +88,30 @@ static void set_crypto_algo(crypto_cfg config, char * algo, char * algo_mode) {
     CRYPTO_ALGO crypto_algo = aes128;
     CRYPTO_ALGO_MODE crypto_algo_mode = cbc;
 
-    if(strcmp(algo, AES128) == 0) {
-        crypto_algo = aes128;
-
-    } else if(strcmp(algo, AES192) == 0) {
-        crypto_algo = aes192;
-    } else if(strcmp(algo, AES256) == 0) {
-        crypto_algo = aes256;
-    } else if(strcmp(algo, DES) == 0) {
-        crypto_algo = des;
+    if(NULL != algo) {
+        if(strcmp(algo, AES128) == 0) {
+            crypto_algo = aes128;
+        } else if(strcmp(algo, AES192) == 0) {
+            crypto_algo = aes192;
+        } else if(strcmp(algo, AES256) == 0) {
+            crypto_algo = aes256;
+        } else if(strcmp(algo, DES) == 0) {
+            crypto_algo = des;
+        }
     }
 
-    if(strcmp(algo_mode, ECB) == 0) {
-        crypto_algo_mode = ecb;
-    } else if(strcmp(algo_mode, CFB) == 0) {
-        crypto_algo_mode = cfb;
-    } else if(strcmp(algo_mode, OFB) == 0) {
-        crypto_algo_mode = ofb;
-    } else if(strcmp(algo_mode, CBC) == 0) {
-        crypto_algo_mode = cbc;
+    if(NULL != algo_mode) {
+        if(strcmp(algo_mode, ECB) == 0) {
+            crypto_algo_mode = ecb;
+        } else if(strcmp(algo_mode, CFB) == 0) {
+            crypto_algo_mode = cfb;
+        } else if(strcmp(algo_mode, OFB) == 0) {
+            crypto_algo_mode = ofb;
+        } else if(strcmp(algo_mode, CBC) == 0) {
+            crypto_algo_mode = cbc;
+        }
     }
+
     uint32_t KEY_SIZE[] = {16, 24, 32, 8}; /* KEY_SIZE is in bytes. ie: aes128 key_size = 128bits/8 */
     config->crypto_algo_strategy_fn = evp_cypto_fns[crypto_algo][crypto_algo_mode];
     config->key_size = KEY_SIZE[crypto_algo];
