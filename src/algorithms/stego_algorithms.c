@@ -264,8 +264,9 @@ static void set_ls_nibble(uint8_t * byte, uint8_t value) {
     |____|____|
     |____|_ba_|
 
-    Output: ab in range (0, ..., 3)
+    Output: ba in range (0, ..., 3)
 */
 static uint8_t get_pattern_index(uint8_t byte) {
-    return (get_i_bit(byte, 2) << 1) | get_i_bit(byte, 3);
+    return (byte & 0x06) >> 1;
+    //return (get_i_bit(byte, 2) << 1) | get_i_bit(byte, 3);
 }
