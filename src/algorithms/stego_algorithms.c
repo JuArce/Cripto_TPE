@@ -169,7 +169,7 @@ void lsbi_embed(uint8_t * carrier, uint32_t carrier_size, uint8_t ** hide, uint3
 void lsbi_extract(uint8_t * carrier, uint32_t carrier_size, uint8_t ** hidden, uint32_t * hidden_size) {
     log(DEBUG, "Using LSBI extract");
     
-    *hidden_size = carrier_size / LSBI_SIZE_FACTOR;
+    *hidden_size = (carrier_size - LSBI_PATTERN_SIZE) / LSBI_SIZE_FACTOR;
 
     *hidden = calloc(1, *hidden_size);
     if(NULL == *hidden) log(FATAL, "%s", strerror(errno));
