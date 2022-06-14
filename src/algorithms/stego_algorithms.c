@@ -36,7 +36,10 @@ static uint8_t get_pattern_index(uint8_t byte);
 
 
 void lsb1_embed(uint8_t * carrier, uint32_t carrier_size, uint8_t ** hide, uint32_t * hide_size) {
-    if(*hide_size * LSB1_SIZE_FACTOR > carrier_size) log(FATAL, "File to hide can not fit into carrier");
+    log(DEBUG, "Using LSB1 embed");
+
+    if(*hide_size * LSB1_SIZE_FACTOR > carrier_size) log(FATAL, "File to hide can not fit into carrier. "
+        "Max size is %.2f KB (%u bytes)", (float)carrier_size / LSB1_SIZE_FACTOR / 1024, carrier_size / LSB1_SIZE_FACTOR);
 
     uint32_t i = 0;
     for(uint32_t j = 0; j < *hide_size; j++) {
@@ -48,6 +51,8 @@ void lsb1_embed(uint8_t * carrier, uint32_t carrier_size, uint8_t ** hide, uint3
 }
 
 void lsb1_extract(uint8_t * carrier, uint32_t carrier_size, uint8_t ** hidden, uint32_t * hidden_size) {
+    log(DEBUG, "Using LSB1 extract");
+
     *hidden_size = carrier_size / LSB1_SIZE_FACTOR;
 
     *hidden = calloc(1, *hidden_size);
@@ -68,7 +73,10 @@ void lsb1_extract(uint8_t * carrier, uint32_t carrier_size, uint8_t ** hidden, u
 }
 
 void lsb4_embed(uint8_t * carrier, uint32_t carrier_size, uint8_t ** hide, uint32_t * hide_size) {
-    if(*hide_size * LSB4_SIZE_FACTOR > carrier_size) log(FATAL, "File to hide can not fit into carrier");
+    log(DEBUG, "Using LSB4 embed");
+    
+    if(*hide_size * LSB4_SIZE_FACTOR > carrier_size) log(FATAL, "File to hide can not fit into carrier. "
+        "Max size is %.2f KB (%u bytes)", (float)carrier_size / LSB4_SIZE_FACTOR / 1024, carrier_size / LSB4_SIZE_FACTOR);
 
     uint32_t i = 0;
     for(uint32_t j = 0; j < *hide_size; j++) {
@@ -80,6 +88,8 @@ void lsb4_embed(uint8_t * carrier, uint32_t carrier_size, uint8_t ** hide, uint3
 }
 
 void lsb4_extract(uint8_t * carrier, uint32_t carrier_size, uint8_t ** hidden, uint32_t * hidden_size) {
+    log(DEBUG, "Using LSB4 extract");
+    
     *hidden_size = carrier_size / LSB4_SIZE_FACTOR;
 
     *hidden = calloc(1, *hidden_size);
@@ -100,7 +110,10 @@ void lsb4_extract(uint8_t * carrier, uint32_t carrier_size, uint8_t ** hidden, u
 }
 
 void lsbi_embed(uint8_t * carrier, uint32_t carrier_size, uint8_t ** hide, uint32_t * hide_size) {
-    if(*hide_size * LSBI_SIZE_FACTOR + LSBI_PATTERN_SIZE > carrier_size) log(FATAL, "File to hide can not fit into carrier");
+    log(DEBUG, "Using LSBI embed");
+    
+    if(*hide_size * LSBI_SIZE_FACTOR + LSBI_PATTERN_SIZE > carrier_size) log(FATAL, "File to hide can not fit into carrier. "
+        "Max size is %.2f KB (%u bytes)", ((float)carrier_size / LSBI_SIZE_FACTOR - LSBI_PATTERN_SIZE) / 1024, carrier_size / LSBI_SIZE_FACTOR - LSBI_PATTERN_SIZE);
 
     patterns_changes_struct pattern_changes[LSBI_PATTERN_SIZE] = {0};
 
@@ -120,9 +133,9 @@ void lsbi_embed(uint8_t * carrier, uint32_t carrier_size, uint8_t ** hide, uint3
     uint8_t patterns[LSBI_PATTERN_SIZE] = {0};
     /** Set 4 bits patterns 
      *  If no changes is greater or equals than changes then set pattern value to 0
-        Else set value to 1
-        0 -> No invert 
-        1 -> Invert  
+     *  Else set value to 1
+     *  0 -> No invert 
+     *  1 -> Invert  
      */ 
     for(uint32_t i = 0; i < LSBI_PATTERN_SIZE; i++) {
         patterns[i] = pattern_changes[i].no_changes < pattern_changes[i].changes ? 1 : 0;
@@ -154,6 +167,8 @@ void lsbi_embed(uint8_t * carrier, uint32_t carrier_size, uint8_t ** hide, uint3
 }
 
 void lsbi_extract(uint8_t * carrier, uint32_t carrier_size, uint8_t ** hidden, uint32_t * hidden_size) {
+    log(DEBUG, "Using LSBI extract");
+    
     *hidden_size = carrier_size / LSBI_SIZE_FACTOR;
 
     *hidden = calloc(1, *hidden_size);

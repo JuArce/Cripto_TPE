@@ -10,7 +10,7 @@
 #define HEADER_SIZE 54
 #define BMP 0x4d42
 #define NOT_COMPRESSED 0
-
+#define BITS_PER_PIXEL 24
 
 typedef struct __attribute__((packed)) bmp_header_struct  {             // Total: 54 bytes
   uint16_t  type;             // Magic identifier: 0x4d42
@@ -31,15 +31,6 @@ typedef struct __attribute__((packed)) bmp_header_struct  {             // Total
   uint32_t  important_colors; // Important colors 
 } bmp_header_struct;
 
-/*
-typedef struct __attribute__((packed)) Pixel {
-    uint8_t blue;
-    uint8_t green;
-    uint8_t red;
-    uint8_t alpha;
-} Pixel;
-*/ 
-
 typedef struct bmp_image_struct {
     bmp_header_struct header;
     uint8_t * data;
@@ -57,6 +48,7 @@ static void check_bmp_header(bmp_image image);
 */
 bmp_image read_image(FILE * fp) {
     log(DEBUG, "Reading bmp image");
+    
     bmp_image image = calloc(1, sizeof(bmp_image_struct));
 
     if(NULL == image) log(FATAL, "%s", strerror(errno));
@@ -74,6 +66,8 @@ void free_image(bmp_image image) {
 }
 
 void write_image(bmp_image image, FILE * fp) {
+  log(DEBUG, "Writing bmp image");
+
   fwrite(&image->header, 1, HEADER_SIZE, fp);
   fwrite(image->data, 1, get_image_size(image), fp);
 }
@@ -89,9 +83,7 @@ uint8_t * get_image_data(bmp_image image) {
 static void read_header(FILE * fp, bmp_image image) {
     uint8_t raw_header[HEADER_SIZE];
     fread(&raw_header, 1, HEADER_SIZE, fp);
-
-    //image->header = (bmp_header_struct) raw_header; //Not works :(
-    memcpy(&image->header, raw_header, HEADER_SIZE); //It works
+    memcpy(&image->header, raw_header, HEADER_SIZE);
 }
 
 /**
@@ -108,6 +100,7 @@ static void read_image_data(FILE * fp, bmp_image image) {
     Check:
         type == 0x4d42
         compression == 0
+        bits per pixel == 24
 */
 static void check_bmp_header(bmp_image image) {
     if (BMP != image->header.type) {
@@ -115,5 +108,8 @@ static void check_bmp_header(bmp_image image) {
     }
     if (NOT_COMPRESSED != image->header.compression) {
         log(FATAL, "Compressed images are not valid")
+    }
+    if (BITS_PER_PIXEL != image->header.bits_per_pixel) {
+        log(FATAL, "Invalid bits per pixel. Only allowed 24 bits per pixel");
     }
 }

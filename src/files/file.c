@@ -26,6 +26,8 @@ static void resize_data(file f, uint32_t size);
     Do not close the file.
 */
 file read_file(FILE * fp, char * filename) {
+	log(DEBUG, "Reading file");
+
 	file f = calloc(1, sizeof(file_struct));
 
 	if(NULL == f) log(FATAL, "%s", strerror(errno));
@@ -46,6 +48,8 @@ void free_file(file f) {
 }
 
 void write_file(uint8_t * data, uint32_t size, FILE * fp) {
+	log(DEBUG, "Writing file")
+
 	fwrite(data, 1, size, fp);
 }
 

@@ -53,7 +53,7 @@ void embed(files f, stego_strategy stego_strategy_fn, crypto_cfg crypto_cfg_ptr)
     free_carrier_file(image);
     free_file(input_file);
 
-    log(INFO, "File embed correctly");
+    log(INFO, "File embedded correctly");
 }
 
 static uint8_t * get_data_to_embed(uint8_t * file_data, uint32_t file_data_size, char * file_extension, uint32_t * embed_size) {

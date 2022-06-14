@@ -42,6 +42,7 @@ unsigned char * decrypt(unsigned char * ciphertext , uint32_t ciphertext_len, ch
     *output_len += len;
 
     EVP_CIPHER_CTX_free(ctx);
+    
     log(INFO, "File decrypted correctly");
 
     return output;

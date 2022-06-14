@@ -32,6 +32,7 @@ void free_files_struct(files f) {
 
 bmp_image read_carrier_file(files f) {
 	if(NULL == f->carrier_file) log(FATAL, "Carrier filename can not be empty");
+	log(DEBUG, "Carrier file: %s", f->carrier_file);
 
 	FILE * carrier = fopen(f->carrier_file, "r");
 
@@ -48,6 +49,7 @@ void free_carrier_file(bmp_image image) {
 
 file read_input_file(files f) {
 	if(NULL == f->input_file) log(FATAL, "Input filename can not be empty");
+	log(DEBUG, "Input file: %s", f->input_file);
 
 	FILE * input = fopen(f->input_file, "r");
 
@@ -71,6 +73,8 @@ void write_output_file(files f, uint8_t * data, size_t size, char * extension) {
 	strcat(filename, f->output_file);
 	strcat(filename, extension);
 
+	log(DEBUG, "Output file: %s", filename);
+
 	FILE * output = fopen(filename, "w");
 
 	if(NULL == output) log(FATAL, "%s: %s", strerror(errno), f->output_file);
@@ -83,6 +87,7 @@ void write_output_file(files f, uint8_t * data, size_t size, char * extension) {
 
 void write_output_image(files f, bmp_image image) {
 	if(NULL == f->output_file) log(FATAL, "Output filename can not be empty")
+	log(DEBUG, "Output image: %s", f->output_file);
 
 	FILE * output = fopen(f->output_file, "w");
 
