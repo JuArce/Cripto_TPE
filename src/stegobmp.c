@@ -4,22 +4,26 @@
 #include "./stego_cfg/stego_cfg.h"
 #include "./logger/logger.h"
 
+#define PADDING 25
+
 int main(int argc, char * argv[]) {
     log(INFO, "Greetings Commander\n");
     cli_options options = parse_command_line(argc, argv);
 
-    /*
-    printf("#### Config ####\n");
-    printf("Mode: %s\n", get_mode(options) == EMBED ? "Embed" : "Extract");
-    printf("Input: %s\n", get_input_file(options));
-    printf("Carrier: %s\n", get_carrier_file(options));
-    printf("Output: %s\n", get_output_file(options));
-    printf("Stego Algorithm: %s\n", get_stego_alg(options));
-    printf("Enc Algorithm: %s\n", get_enc_alg(options));
-    printf("Enc Mode: %s\n", get_enc_mode(options));
-    printf("Password: %s\n", get_password(options));
-    printf("################\n\n");
-    */
+    printf("Configuration\n");
+    printf("%-*s%s\n", PADDING, "Mode: ", EMBED ==get_mode(options)  ? "Embed" : "Extract");
+    if(EMBED == get_mode(options)) {
+        printf("%-*s%s\n", PADDING, "Input File: ", get_input_file(options));
+    }
+    printf("%-*s%s\n", PADDING, "Carrier File: ", get_carrier_file(options));
+    printf("%-*s%s\n", PADDING, "Output File: ", get_output_file(options));
+    printf("%-*s%s\n", PADDING, "Stego Algorithm: ", get_stego_algo(options));
+    if(NULL !=  get_password(options)) {
+        printf("%-*s%s\n", PADDING, "Encryption Algorithm: ", NULL != get_enc_algo(options) ? get_enc_algo(options) : "aes128");
+        printf("%-*s%s\n", PADDING, "Encryption Mode: ", NULL != get_enc_mode(options) ? get_enc_mode(options) : "CBC");
+        printf("%-*s%s\n", PADDING, "Password: ", get_password(options));
+    }
+    printf("\n");
 
     stego_cfg cfg = create_stego_config(options);
 
