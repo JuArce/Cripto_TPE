@@ -20,7 +20,7 @@ int main(int argc, char * argv[]) {
     printf("%-*s%s\n", PADDING, "Stego Algorithm: ", get_stego_algo(options));
     if(NULL !=  get_password(options)) {
         printf("%-*s%s\n", PADDING, "Encryption Algorithm: ", NULL != get_enc_algo(options) ? get_enc_algo(options) : "aes128");
-        printf("%-*s%s\n", PADDING, "Encryption Mode: ", NULL != get_enc_mode(options) ? get_enc_mode(options) : "CBC");
+        printf("%-*s%s\n", PADDING, "Encryption Mode: ", NULL != get_enc_mode(options) ? get_enc_mode(options) : "cbc");
         printf("%-*s%s\n", PADDING, "Password: ", get_password(options));
     }
     printf("\n");

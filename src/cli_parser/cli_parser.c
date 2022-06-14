@@ -6,6 +6,9 @@
 #include "cli_parser.h"
 #include "../logger/logger.h"
 
+
+#define ARG_PADDING 36
+
 static struct option long_options[] = {
    {"embed",    no_argument,        0,  EMBED   },
    {"extract",  no_argument,        0,  EXTRACT },
@@ -135,7 +138,29 @@ char * get_password(cli_options options) {
 
 // TODO 
 static void print_help() {
-    printf("Usage: ...\n");
-    printf("...\n");
+    printf("Usage: stegobmp -MODE [-in filename] -p filename -out filename -steg <LSB1 | LSB4 | LSBI> [-a <aes128 | aes196 | aes256 | des>] [-m <ecb | cfb | ofb | cbc] [-pass password] [-help] \n");
+
+    printf("\nModes.\n");
+    printf("%-*s\t%s", ARG_PADDING, "-embed",                               "Set embed mode.\n");
+    printf("%-*s\t%s", ARG_PADDING, "-extract",                             "Set extract mode.\n");
+
+    printf("\nMandatory arguments.\n");
+    printf("%-*s\t%s", ARG_PADDING, "-in filename",                         "File to be hidden.\n");
+    printf("%-*s\t%s", ARG_PADDING, "-p filename",                          "Carrier file. Must be a bmp image.\n");
+    printf("%-*s\t%s", ARG_PADDING, "-out filename",                        "Output file.\n");
+    printf("%-*s\t%s", ARG_PADDING, "-steg <LSB1 | LSB4 | LSBI>",           "Steganography algorithm.\n");
+
+    printf("\nNon mandatory arguments.\n");
+    printf("%-*s\t%s", ARG_PADDING, "-a <aes128 | aes196 | aes256 | des>",  "Cryptography algorithm.\n");
+    printf("%-*s\t%s", ARG_PADDING, "-m <ecb | cfb | ofb | cbc",            "Cryptography mode.\n");
+    printf("%-*s\t%s", ARG_PADDING, "-pass password",                       "Password.\n");
+
+    printf("\nOther arguments.\n");
+    printf("%-*s\t%s", ARG_PADDING, "-help",                                "Print usage and this help message and exit.\n");
+
+    printf("\n%s\n",    "If there is no password, encryption will be omitted.");
+    printf("%s\n",      "By deafult, cryptography algorithm is aes128.");
+    printf("%s\n",      "By deafult, cryptography mode is cbc.");
+
     exit(EXIT_SUCCESS);
 }
