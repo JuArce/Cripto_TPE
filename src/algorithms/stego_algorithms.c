@@ -7,25 +7,26 @@
 #include "../logger/logger.h"
 
 
-#define LSB1_MASK 0xFE
+#define LSB1_MASK 0xFE /* 1111 1110 */
 #define LSB1_SIZE_FACTOR 8
 #define LSB1_OPERATIONS 8
 
-#define LSB4_MASK 0xF0
+#define LSB4_MASK 0xF0 /* 1111 0000 */
 #define LSB4_SIZE_FACTOR 2
 #define LSB4_OPERATIONS 2
 
-#define LSBI_MASK LSB1_MASK
+#define LSBI_MASK LSB1_MASK /* 1111 1110 */
 #define LSBI_PATTERN_MASK 0x03 /* 0000 0011 */ 
 #define LSBI_SIZE_FACTOR 8
 #define LSBI_OPERATIONS 8
-#define LSBI_PATTERN_SIZE 4
+#define LSBI_PATTERN_SIZE 4 /* 00 | 01 | 11 | 10 */ 
 
 
 typedef struct patterns_changes_struct {
     uint32_t changes;
     uint32_t no_changes;
 } patterns_changes_struct;
+
 
 static uint8_t get_i_bit(uint8_t byte, uint8_t i);
 static void set_ls_bit(uint8_t * byte, uint8_t value);
@@ -58,8 +59,7 @@ void lsb1_extract(uint8_t * carrier, uint32_t carrier_size, uint8_t ** hidden, u
         uint8_t bit = get_i_bit(carrier[i], 1);
         byte <<= 1;
         byte |= bit;
-        j++;
-        if(j % LSB1_OPERATIONS == 0) {
+        if(++j % LSB1_OPERATIONS == 0) {
             (*hidden)[hidden_iter++] = byte;
             byte = 0;
             j = 0;
@@ -100,37 +100,52 @@ void lsb4_extract(uint8_t * carrier, uint32_t carrier_size, uint8_t ** hidden, u
 }
 
 void lsbi_embed(uint8_t * carrier, uint32_t carrier_size, uint8_t ** hide, uint32_t * hide_size) {
-    if(*hide_size * LSBI_SIZE_FACTOR > carrier_size) log(FATAL, "File to hide can not fit into carrier");
+    if(*hide_size * LSBI_SIZE_FACTOR + LSBI_PATTERN_SIZE > carrier_size) log(FATAL, "File to hide can not fit into carrier");
 
-    patterns_changes_struct pattern_changes[LSBI_PATTERN_SIZE];
-    memset(&pattern_changes, 0, sizeof(pattern_changes));
+    patterns_changes_struct pattern_changes[LSBI_PATTERN_SIZE] = {0};
 
+    /* Count quantity of bit changes and no changes */
     uint32_t carrier_index = 0;
     for(uint32_t j = 0; j < *hide_size; j++) {
-        for(int k = LSB1_OPERATIONS; k > 0; k--) {
+        for(int k = LSBI_OPERATIONS; k > 0; k--) {
             uint8_t hide_bit = get_i_bit((*hide)[j], k);
             uint8_t carrier_bit = get_i_bit(carrier[carrier_index], 1);
             uint8_t pattern_index = get_pattern_index(carrier[carrier_index++]);
-            hide_bit == carrier_bit ? pattern_changes[pattern_index].no_changes++ : pattern_changes[pattern_index].changes++; 
+            hide_bit == carrier_bit ? 
+                pattern_changes[pattern_index].no_changes++ : pattern_changes[pattern_index].changes++; 
         }
     }
 
     
     uint8_t patterns[LSBI_PATTERN_SIZE] = {0};
-    /* Set 4 bits patterns */ 
+    /** Set 4 bits patterns 
+     *  If no changes is greater or equals than changes then set pattern value to 0
+        Else set value to 1
+        0 -> No invert 
+        1 -> Invert  
+     */ 
     for(uint32_t i = 0; i < LSBI_PATTERN_SIZE; i++) {
-        patterns[i] = pattern_changes[i].no_changes < pattern_changes[i].changes;
-        printf("No change: %u | Change: %u\n", pattern_changes[i].no_changes, pattern_changes[i].changes);
-        printf("%u\n", patterns[i]);
+        patterns[i] = pattern_changes[i].no_changes < pattern_changes[i].changes ? 1 : 0;
     }
 
+    /** Embed the 4 bits patterns at begin
+     *  Carrier     |____|___a| |____|___b| |____|___c| |____|___d|
+     *  Patterns    |abcd|
+     */
     uint32_t i = 0;
     for(uint32_t j = 0; j < LSBI_PATTERN_SIZE; j++) {
         set_ls_bit(carrier + i++, patterns[j]);
     }
 
+    /** Embed all the data after the 4 bits patterns
+     *  Carrier     |____|___a| |____|___b| |____|___c| |____|___d|...
+     *  Patterns    |abcd|
+     *
+     *  Carrier + 4 ...|____|___a|...
+     *  To hide     |a___|____|...
+     */
     for(uint32_t j = 0; j < *hide_size; j++) {
-        for(int k = LSB1_OPERATIONS; k > 0; k--) {
+        for(int k = LSBI_OPERATIONS; k > 0; k--) {
             uint8_t bit = get_i_bit((*hide)[j], k);
             uint8_t pattern_index = get_pattern_index(carrier[i]);
             set_ls_bit(carrier + i++, patterns[pattern_index] == 1 ? !bit : bit);
@@ -146,28 +161,34 @@ void lsbi_extract(uint8_t * carrier, uint32_t carrier_size, uint8_t ** hidden, u
 
     uint8_t byte = 0;
     uint32_t hidden_iter = 0;
-
-    uint8_t * aux_carrier = carrier;
-
+    uint32_t carrier_iter = 0;
     uint8_t patterns[LSBI_PATTERN_SIZE] = {0};
-    /* Extract 4 bits patterns */ 
-    for(uint32_t i = 0; i < LSBI_PATTERN_SIZE; i++) {
-        uint8_t bit = get_i_bit(aux_carrier[i], 1);
-        patterns[i] = bit;
+
+    /** Extract 4 bits patterns 
+     *  Carrier     |____|___a| |____|___b| |____|___c| |____|___d|...
+     *  Patterns    [a, b, c, d]
+     */ 
+    for(carrier_iter = 0; carrier_iter < LSBI_PATTERN_SIZE; carrier_iter++) {
+        uint8_t bit = get_i_bit(carrier[carrier_iter], 1);
+        patterns[carrier_iter] = bit;
     }
 
-    aux_carrier += LSBI_PATTERN_SIZE;
-    /* Extract all the data */
-    for(uint32_t i = 0, j = 0; i < carrier_size - LSBI_PATTERN_SIZE; i++) {
-        uint8_t pattern_index = get_pattern_index(aux_carrier[i]);
-        uint8_t bit = get_i_bit(aux_carrier[i], 1);
+    /** Extract all the data after the 4 bits patterns
+     *  Carrier     |____|___a| |____|___b| |____|___c| |____|___d|...
+     *  Patterns    |abcd|
+     *
+     *  Carrier + 4 ...|____|___a|...
+     *  Hidden      |a___|____|...
+     */
+    for(uint32_t j = 0; carrier_iter < carrier_size; carrier_iter++) {
+        uint8_t pattern_index = get_pattern_index(carrier[carrier_iter]);
+        uint8_t bit = get_i_bit(carrier[carrier_iter], 1);
         if(patterns[pattern_index] == 1) {
             bit = bit == 1 ? 0 : 1;
         }
         byte <<= 1;
         byte |= bit;
-        j++;
-        if(j % LSBI_OPERATIONS == 0) {
+        if(++j % LSBI_OPERATIONS == 0) {
             (*hidden)[hidden_iter++] = byte;
             byte = 0;
             j = 0;
@@ -193,7 +214,6 @@ static uint8_t get_i_bit(uint8_t byte, uint8_t i) {
     |    |ls b|
 */
 static void set_ls_bit(uint8_t * byte, uint8_t value) {
-    //log(DEBUG, "%d", value);
     if(value > 1) {
         log(FATAL, "Invalid bit value");
     }
@@ -218,7 +238,6 @@ static uint8_t get_i_nibble(uint8_t byte, uint8_t i) {
     |    |ls n|
 */
 static void set_ls_nibble(uint8_t * byte, uint8_t value) {
-    //log(DEBUG, "%d", value);
     if(value > 0xF) {
         log(FATAL, "Invalid nibble value");
     }
@@ -227,14 +246,11 @@ static void set_ls_nibble(uint8_t * byte, uint8_t value) {
 }
 
 /**
-    Return 
     |____|____|
     |____|_ba_|
 
     Output: ab in range (0, ..., 3)
 */
 static uint8_t get_pattern_index(uint8_t byte) {
-    //printf("bit 2: %u | \n", );
-    //printf("%u | %u\n", byte, (get_i_bit(byte, 2) << 1) | get_i_bit(byte, 3));
     return (get_i_bit(byte, 2) << 1) | get_i_bit(byte, 3);
 }
