@@ -66,6 +66,10 @@ static void set_stego_mode(stego_cfg config, int mode) {
 }
 
 static void set_stego_strategy(stego_cfg config, char * stego_algo) {
+    if(NULL == stego_algo) {
+        log(FATAL, "Missing  steganography mode");
+    }
+    
     switch(config->mode) {
         case EMBED_MODE:
             if(strcmp(stego_algo, LSB1) == 0) {
