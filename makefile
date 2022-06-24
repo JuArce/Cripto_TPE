@@ -16,9 +16,3 @@ COMMON = ./src/algorithms/decrypt.o ./src/algorithms/embed.o ./src/algorithms/en
 stegobmp: $(COMMON)
 	$(COMPILER) $(CFLAGS) -o stegobmp ./src/stegobmp.c $(COMMON) $(LIBS)
 		rm -f src/**/*.o
-
-test: clean all
-	mkdir tests; valgrind --leak-check=full -v ./src/stegobmp 2>> tests/results.valgrind; cppcheck --quiet --enable=all --force --inconclusive ./src/stegobmp.c 2>> tests/output.cppOut
-
-cleanTest:
-	rm -rf tests/output.cppOut ./tests/report.tasks tests/results.valgrind tests
