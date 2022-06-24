@@ -4,7 +4,7 @@
 ## Autores
 
 - [Arce, Julián Francisco](https://github.com/juarce)
-- [Conca, María Victoria](https://github.com/rcatalan98)
+- [Conca, María Victoria](https://github.com/Mickyconca)
 - [Domingues, Paula Andrea](https://github.com/pdomins)
 
 ## Objetivos
