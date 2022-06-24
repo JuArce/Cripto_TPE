@@ -24,7 +24,7 @@ unsigned char * encrypt(unsigned char * plaintext, uint32_t plaintext_len, char 
     EVP_BytesToKey(crypto_algo_fn(), EVP_sha256(), NULL, (unsigned char *)password, strlen(password), 1, key, iv);
 
     if(1 != EVP_EncryptInit_ex(ctx, crypto_algo_fn(), NULL, key, iv)) {
-        log(FATAL, "EVP Ecnrypt Init ex failed");
+        log(FATAL, "EVP Encrypt Init ex failed");
     }
 
     unsigned char * output = calloc(1, MAX_SIZE);
