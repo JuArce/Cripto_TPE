@@ -159,8 +159,8 @@ static void print_help() {
     printf("%-*s\t%s", ARG_PADDING, "-help",                                "Print usage and this help message and exit.\n");
 
     printf("\n%s\n",    "If there is no password, encryption will be omitted.");
-    printf("%s\n",      "By deafult, cryptography algorithm is aes128.");
-    printf("%s\n",      "By deafult, cryptography mode is cbc.");
+    printf("%s\n",      "By default, cryptography algorithm is aes128.");
+    printf("%s\n",      "By default, cryptography mode is cbc.");
 
     exit(EXIT_SUCCESS);
 }
