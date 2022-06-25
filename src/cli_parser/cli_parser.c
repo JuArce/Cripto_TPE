@@ -136,7 +136,6 @@ char * get_password(cli_options options) {
     return options->password;
 }
 
-// TODO 
 static void print_help() {
     printf("Usage: stegobmp -MODE [-in filename] -p filename -out filename -steg <LSB1 | LSB4 | LSBI> [-a <aes128 | aes196 | aes256 | des>] [-m <ecb | cfb | ofb | cbc] [-pass password] [-help] \n");
 
